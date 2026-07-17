@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Techno Plast Ltd - Water Tanks</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #fff; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+        
+        /* Top Bar */
+        .top-bar { background-color: #ff7f00; color: white; text-align: center; padding: 10px 0; font-weight: bold; font-size: 14px; }
+        
+        /* Header */
+        header { padding: 20px 0; border-bottom: 1px solid #eee; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo img { height: 50px; }
+        .logo-text { font-weight: bold; color: #333; }
+        .logo-text span { color: #ff7f00; }
+        .header-info { display: flex; align-items: center; gap: 20px; font-size: 14px; color: #555; }
+        .header-info .highlight { color: #ff7f00; font-weight: bold; }
+        .btn-quote { background-color: #ff7f00; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+
+        /* Navigation */
+        nav { background-color: #333; padding: 15px 0; }
+        .nav-links { display: flex; justify-content: center; gap: 30px; list-style: none; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 600; font-size: 16px; }
+        .nav-links a.active, .nav-links a:hover { color: #ff7f00; }
+
+        /* Breadcrumbs */
+        .breadcrumbs { padding: 20px 0; font-size: 14px; color: #888; border-bottom: 1px solid #eee; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        .breadcrumbs span { color: #333; font-weight: bold; }
+        .sort-dropdown { border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; color: #333; }
+
+        /* Product Grid */
+        .section-title { text-align: center; font-size: 36px; color: #444; margin: 60px 0 40px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 60px; }
+        .product-card { text-align: center; }
+        .product-card img { width: 100%; height: auto; border-radius: 10px; background: #f9f9f9; padding: 10px; }
+        .product-cat { color: #999; font-size: 12px; margin-top: 15px; text-transform: uppercase; }
+        .product-title { color: #444; font-size: 18px; margin-top: 5px; }
+
+        /* Footer */
+        footer { background: #333; color: #ccc; padding: 60px 0 20px; }
+        .footer-content { display: flex; flex-wrap: wrap; gap: 40px; }
+        .footer-logo { flex: 1; min-width: 200px; display: flex; align-items: center; }
+        .footer-logo img { width: 120px; }
+        .footer-col { flex: 1; min-width: 250px; }
+        .footer-col h3 { color: white; font-size: 18px; border-left: 4px solid #ff7f00; padding-left: 10px; margin-bottom: 20px; }
+        .footer-col p { line-height: 1.8; font-size: 14px; }
+        .footer-col .contact-info { color: #ff7f00; font-weight: bold; margin-top: 15px; display: block; }
+        .footer-col .contact-info span { color: #ccc; font-weight: normal; }
+        .copyright { text-align: center; margin-top: 40px; font-size: 12px; border-top: 1px solid #444; padding-top: 20px; }
+
+        /* Cart Icon */
+        .btn-cart { position: relative; background: none; border: 2px solid #ff7f00; color: #ff7f00; padding: 9px 16px; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
+        .btn-cart:hover { background: #fff4e8; }
+        .cart-count { display: none; align-items: center; justify-content: center; background: #ff7f00; color: white; border-radius: 50%; min-width: 20px; height: 20px; font-size: 12px; padding: 0 4px; }
+
+        /* Modal Overlay */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+
+        /* Cart Modal */
+        .cart-modal, .checkout-modal { background: white; border-radius: 10px; width: 100%; max-width: 480px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #eee; }
+        .modal-header h2 { color: #444; font-size: 20px; }
+        .modal-close { background: none; border: none; font-size: 26px; color: #999; cursor: pointer; line-height: 1; }
+        .modal-close:hover { color: #ff7f00; }
+
+        .cart-items-container { padding: 10px 24px; overflow-y: auto; flex: 1; }
+        .cart-empty { text-align: center; color: #999; padding: 40px 0; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f0f0f0; gap: 10px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-name { color: #444; font-weight: bold; font-size: 15px; }
+        .cart-item-cap { color: #888; font-size: 13px; margin-top: 2px; }
+        .cart-item-price { color: #ff7f00; font-weight: bold; font-size: 14px; margin-top: 4px; }
+        .cart-item-controls { display: flex; align-items: center; gap: 8px; }
+        .cart-item-controls button { width: 26px; height: 26px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; font-size: 15px; color: #444; }
+        .cart-item-controls button:hover { border-color: #ff7f00; color: #ff7f00; }
+        .cart-item-controls span { min-width: 18px; text-align: center; font-weight: bold; color: #444; }
+        .cart-remove { border: none !important; background: none !important; color: #cc4444 !important; font-size: 16px !important; margin-left: 4px; }
+
+        .cart-footer { padding: 18px 24px; border-top: 1px solid #eee; }
+        .cart-total-row { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #444; margin-bottom: 14px; }
+        .cart-total-row span:last-child { color: #ff7f00; }
+        .btn-checkout { width: 100%; background: #25D366; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-checkout:hover { background: #1ebd5a; }
+
+        /* Checkout Form Modal */
+        #checkoutForm { padding: 20px 24px; overflow-y: auto; }
+        #checkoutForm .form-group { margin-bottom: 16px; }
+        #checkoutForm label { display: block; margin-bottom: 6px; color: #555; font-weight: 500; font-size: 14px; }
+        #checkoutForm input { width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; outline: none; }
+        #checkoutForm input:focus { border-color: #ff7f00; }
+        .checkout-summary { background: #f9f9f9; border-radius: 6px; padding: 14px 16px; margin: 16px 0; }
+        .summary-title { font-weight: bold; color: #444; margin-bottom: 10px; font-size: 14px; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #666; padding: 4px 0; }
+        .summary-total { border-top: 1px solid #ddd; margin-top: 8px; padding-top: 10px; font-weight: bold; color: #444; font-size: 15px; }
+        .summary-total span:last-child { color: #ff7f00; }
+        .btn-submit-order { width: 100%; background: #25D366; color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-submit-order:hover { background: #1ebd5a; }
+
+        /* Toast */
+        .cart-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; opacity: 0; pointer-events: none; transition: 0.3s; z-index: 3000; white-space: nowrap; }
+        .cart-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 500px) {
+            .cart-modal, .checkout-modal { max-height: 90vh; }
+            .cart-toast { font-size: 13px; padding: 10px 18px; bottom: 90px; }
+        }
+    
+        /* ===== Mobile Hamburger Nav ===== */
+        .nav-container { display: flex; align-items: center; justify-content: space-between; }
+        .nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+        .nav-toggle span { display: block; width: 26px; height: 3px; background: white; border-radius: 2px; transition: 0.3s; }
+
+        @media (max-width: 768px) {
+            .nav-toggle { display: flex; }
+            nav .container { flex-wrap: wrap; }
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                gap: 18px;
+                width: 100%;
+                padding-top: 18px;
+            }
+            .nav-links.nav-open { display: flex; }
+        }
+
+        /* ===== Floating Order Now Button ===== */
+        .float-order-now {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background-color: #ff7f00;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: transform 0.2s ease;
+        }
+        .float-order-now:hover { transform: scale(1.06); }
+        @keyframes pulse-order {
+            0% { box-shadow: 0 0 0 0 rgba(255,127,0,0.55); }
+            70% { box-shadow: 0 0 0 14px rgba(255,127,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,127,0,0); }
+        }
+        .float-order-now { animation: pulse-order 2.4s infinite; }
+        @media (max-width: 600px) {
+            .float-order-now { bottom: 16px; left: 16px; padding: 12px 18px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">WELCOME TO THE TECHNOTANKS STORE!</div>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <img src="logo.png" alt="Techno Plast Logo">
+                <div class="logo-text">TECHNO PLAST LTD.<br><span>Home of quality tanks</span></div>
+            </div>
+            <div class="header-info">
+                <div><span class="highlight">Sales:</span> 0788 203 584</div>
+                <button type="button" class="btn-cart" onclick="openCart()">🛒 Cart <span id="cartCount" class="cart-count">0</span></button>
+                <a href="#" class="btn-quote">VIEW QUOTES</a>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <button class="nav-toggle" onclick="toggleNav()" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="water-tanks.html" class="active">Water Tanks</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <script>
+        function toggleNav() {
+            document.getElementById('navLinks').classList.toggle('nav-open');
+        }
+    </script>
+
+
+    <div class="container">
+        <div class="breadcrumbs">
+            <div>HOME / <span>SHOP</span></div>
+            <div>
+                Showing all 6 results 
+                <select class="sort-dropdown">
+                    <option>Default sorting</option>
+                </select>
+            </div>
+        </div>
+
+        <h2 class="section-title">Our Water Tanks</h2>
+        
+        <div class="product-grid">
+            <a href="product-detail.html#tank1" style="text-decoration: none; display: block;">
+            <div class="product-card">
+                <img src="1.png" alt="Rectangular Loft Tank">
+                <div class="product-cat">Water Tanks</div>
+                <div class="product-title">Rectangular Loft Tank</div>
+            </div>
+            </a>
+            <a href="product-detail.html#tank2" style="text-decoration: none; display: block;">
+            <div class="product-card">
+                <img src="2.png" alt="Septic Tank">
+                <div class="product-cat">Water Tanks</div>
+                <div class="product-title">Septic Tank</div>
+            </div>
+            </a>
+            <a href="product-detail.html#tank3" style="text-decoration: none; display: block;">
+            <div class="product-card">
+                <img src="3.png" alt="Underground Tank">
+                <div class="product-cat">Water Tanks</div>
+                <div class="product-title">Underground Tank</div>
+            </div>
+            </a>
+            <a href="product-detail.html#tank4" style="text-decoration: none; display: block;">
+            <div class="product-card">
+                <img src="4.png" alt="Water Tank - Regular">
+                <div class="product-cat">Water Tanks</div>
+                <div class="product-title">Water Tank – Regular</div>
+            </div>
+            </a>
+            <a href="product-detail.html#tank5" style="text-decoration: none; display: block;">
+            <div class="product-card">
+                <img src="5.png" alt="Water Tank - Short">
+                <div class="product-cat">Water Tanks</div>
+                <div class="product-title">Water Tank – Short</div>
+            </div>
+            </a>
+            <a href="product-detail.html#tank6" style="text-decoration: none; display: block;">
+            <div class="product-card">
+                <img src="6.png" alt="Water Tank - Tall">
+                <div class="product-cat">Water Tanks</div>
+                <div class="product-title">Water Tank – Tall</div>
+            </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-logo">
+                <img src="footer.png" alt="Footer Logo">
+            </div>
+            <div class="footer-col">
+                <h3>Lunga Lunga Office</h3>
+                <p>Manufacturing: Water Tanks | Loft Tanks | Underground Tanks | Transportation Tanks | Agricultural Products | Household Items</p>
+                <div class="contact-info">0788 203 584</div>
+                <div class="contact-info"><span>Website:</span> https://technotankskenya.com</div>
+            </div>
+            <div class="footer-col">
+                <h3>Parklands Showroom Office</h3>
+                <p>Dealers in: Tiles | Kitchens | Kitchen Fittings | Bathroom & Wellness | Faucets | Wooden Floorings | Accessories | and much more...</p>
+                <div class="contact-info">0788 203 584</div>
+                <div class="contact-info"><span>Website:</span> https://technotankskenya.com</div>
+            </div>
+        </div>
+        <div class="container copyright">
+            Copyright 2026 © TechnoPlast
+        </div>
+    </footer>
+
+
+    <!-- Floating Contact Buttons -->
+    <div class="floating-contact">
+        <a href="https://wa.me/254788203584?text=Hi%2C%20I%27m%20interested%20in%20your%20water%20tanks." target="_blank" rel="noopener" class="float-btn float-whatsapp" aria-label="Chat on WhatsApp">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.148-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.892.526 3.66 1.44 5.167L2 22l4.966-1.404A9.945 9.945 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12.001 2zm0 18.062a8.028 8.028 0 01-4.417-1.315l-.317-.202-3.147.89.898-3.074-.207-.315A8.03 8.03 0 013.938 12c0-4.45 3.612-8.062 8.063-8.062 4.45 0 8.062 3.612 8.062 8.062 0 4.45-3.612 8.062-8.062 8.062z"/></svg>
+        </a>
+        <a href="tel:+254788203584" class="float-btn float-call" aria-label="Call us">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 011 1V20a1 1 0 01-1 1C10.61 21 3 13.39 3 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.24.2 2.45.57 3.57a1 1 0 01-.25 1.02l-2.2 2.2z"/></svg>
+        </a>
+    </div>
+
+    <style>
+        .floating-contact { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 14px; z-index: 999; }
+        .float-btn { width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 4px 14px rgba(0,0,0,0.3); text-decoration: none; transition: transform 0.2s ease; }
+        .float-btn:hover { transform: scale(1.08); }
+        .float-whatsapp { background-color: #25D366; }
+        .float-call { background-color: #ff7f00; }
+        @keyframes pulse-wa { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,0.6); } 70% { box-shadow: 0 0 0 14px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
+        .float-whatsapp { animation: pulse-wa 2.2s infinite; }
+        @media (max-width: 600px) {
+            .floating-contact { bottom: 16px; right: 16px; gap: 10px; }
+            .float-btn { width: 50px; height: 50px; }
+        }
+    </style>
+
+    <!-- Cart Modal -->
+    <div id="cartOverlay" class="modal-overlay" onclick="closeCartOnOverlay(event)">
+        <div class="cart-modal">
+            <div class="modal-header">
+                <h2>🛒 Your Cart</h2>
+                <button class="modal-close" onclick="closeCart()">&times;</button>
+            </div>
+            <div id="cartItemsContainer" class="cart-items-container"></div>
+            <div class="cart-footer">
+                <div class="cart-total-row"><span>Total:</span><span id="cartTotal">KSh 0</span></div>
+                <button class="btn-checkout" onclick="startCheckout()">ORDER NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Form Modal -->
+    <div id="checkoutOverlay" class="modal-overlay" onclick="closeCheckoutOnOverlay(event)">
+        <div class="checkout-modal">
+            <div class="modal-header">
+                <h2>Complete Your Order</h2>
+                <button class="modal-close" onclick="closeCheckout()">&times;</button>
+            </div>
+            <form id="checkoutForm" onsubmit="submitCheckout(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="custName" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="custPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Delivery Location (County)</label>
+                    <input type="text" id="custLocation" required>
+                </div>
+                <div class="checkout-summary" id="checkoutSummary"></div>
+                <button type="submit" class="btn-submit-order">PLACE ORDER</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cart Toast -->
+    <div id="cartToast" class="cart-toast"></div>
+
+    <!-- Cart System -->
+    <script>
+        const CART_KEY = 'technoTankCart';
+        const CART_WHATSAPP_NUMBER = '254788203584';
+
+        function getCart() {
+            try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch (e) { return []; }
+        }
+        function saveCart(cart) {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            updateCartBadge();
+        }
+        function parsePrice(priceStr) {
+            return parseInt(String(priceStr).replace(/[^0-9]/g, ''), 10) || 0;
+        }
+        function formatPrice(num) {
+            return 'KSh ' + num.toLocaleString();
+        }
+        function updateCartBadge() {
+            const cart = getCart();
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            const badge = document.getElementById('cartCount');
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'inline-flex' : 'none';
+            }
+        }
+        function addToCart(item) {
+            let cart = getCart();
+            const idx = cart.findIndex(c => c.id === item.id && c.capacity === item.capacity);
+            if (idx > -1) {
+                cart[idx].qty += 1;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+            saveCart(cart);
+            showToast(`${item.name} (${item.capacity}) added to cart`);
+        }
+        function removeFromCart(index) {
+            let cart = getCart();
+            cart.splice(index, 1);
+            saveCart(cart);
+            renderCart();
+        }
+        function changeQty(index, delta) {
+            let cart = getCart();
+            if (!cart[index]) return;
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) cart.splice(index, 1);
+            saveCart(cart);
+            renderCart();
+        }
+        function cartTotal() {
+            return getCart().reduce((sum, item) => sum + item.priceNum * item.qty, 0);
+        }
+        function renderCart() {
+            const cart = getCart();
+            const container = document.getElementById('cartItemsContainer');
+            if (!container) return;
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="cart-empty">Your cart is empty.</p>';
+            } else {
+                container.innerHTML = cart.map((item, i) => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-cap">${item.capacity}</div>
+                            <div class="cart-item-price">${formatPrice(item.priceNum)}</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button type="button" onclick="changeQty(${i}, -1)">−</button>
+                            <span>${item.qty}</span>
+                            <button type="button" onclick="changeQty(${i}, 1)">+</button>
+                            <button type="button" class="cart-remove" onclick="removeFromCart(${i})">🗑</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            const totalEl = document.getElementById('cartTotal');
+            if (totalEl) totalEl.textContent = formatPrice(cartTotal());
+            updateCartBadge();
+        }
+        function openCart() {
+            renderCart();
+            document.getElementById('cartOverlay').classList.add('active');
+        }
+        function closeCart() {
+            document.getElementById('cartOverlay').classList.remove('active');
+        }
+        function closeCartOnOverlay(e) {
+            if (e.target.id === 'cartOverlay') closeCart();
+        }
+        function startCheckout() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('Your cart is empty. Add a product first.');
+                return;
+            }
+            closeCart();
+            renderCheckoutSummary();
+            document.getElementById('checkoutOverlay').classList.add('active');
+        }
+        function renderCheckoutSummary() {
+            const cart = getCart();
+            const summary = document.getElementById('checkoutSummary');
+            if (!summary) return;
+            const rows = cart.map(item => `<div class="summary-row"><span>${item.name} (${item.capacity}) x${item.qty}</span><span>${formatPrice(item.priceNum * item.qty)}</span></div>`).join('');
+            summary.innerHTML = `<div class="summary-title">Order Summary</div>${rows}<div class="summary-row summary-total"><span>Total</span><span>${formatPrice(cartTotal())}</span></div>`;
+        }
+        function closeCheckout() {
+            document.getElementById('checkoutOverlay').classList.remove('active');
+        }
+        function closeCheckoutOnOverlay(e) {
+            if (e.target.id === 'checkoutOverlay') closeCheckout();
+        }
+        function submitCheckout(event) {
+            event.preventDefault();
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('Your cart is empty.');
+                return;
+            }
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const location = document.getElementById('custLocation').value;
+
+            const itemLines = cart.map(item => `- ${item.name} (${item.capacity}) x${item.qty} = ${formatPrice(item.priceNum * item.qty)}`).join('\n');
+            const total = formatPrice(cartTotal());
+
+            let message = `Hello Techno Tanks, I would like to place an order.\n\nName: ${name}\nPhone: ${phone}\nCounty: ${location}\n\nOrder Details:\n${itemLines}\n\nTotal: ${total}`;
+
+            const waLink = `https://wa.me/${CART_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(waLink, '_blank');
+
+            saveCart([]);
+            closeCheckout();
+            document.getElementById('checkoutForm').reset();
+        }
+        function showToast(msg) {
+            const toast = document.getElementById('cartToast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(window._cartToastTimer);
+            window._cartToastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+        document.addEventListener('DOMContentLoaded', updateCartBadge);
+    </script>
+
+
+    <!-- Floating Order Now Button -->
+    <a href="product-detail.html" class="float-order-now" aria-label="Order Now">
+        🛒 Order Now
+    </a>
+
+</body>
+</html>
