@@ -185,6 +185,35 @@
     font-size: 16px;
 }
 
+/* Responsive: prevent the 600px min-width bar from forcing horizontal
+   overflow (and forced browser zoom-out) on phone-sized screens */
+@media (max-width: 700px) {
+    .action-bar-wrapper {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+    }
+    .action-bar {
+        min-width: 0;
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 8px;
+        padding: 12px 14px;
+    }
+    .action-item {
+        font-size: 13px;
+        padding: 0 8px;
+        border-right: none;
+    }
+    .btn-shop {
+        width: 100%;
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
         /* Top Sellers */
         .section-title {
             text-align: center;
